@@ -16,9 +16,9 @@ use Yiisoft\Yii\AuthClient\OAuth2;
  */
 final class Live extends OAuth2
 {
-    private string $authUrl = 'https://login.live.com/oauth20_authorize.srf';
-    private string $tokenUrl = 'https://login.live.com/oauth20_token.srf';
-    private string $endpoint = 'https://apis.live.net/v5.0';
+    protected string $authUrl = 'https://login.live.com/oauth20_authorize.srf';
+    protected string $tokenUrl = 'https://login.live.com/oauth20_token.srf';
+    protected string $endpoint = 'https://apis.live.net/v5.0';
 
     /**
      * @return string service name.

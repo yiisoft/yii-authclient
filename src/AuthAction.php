@@ -270,7 +270,7 @@ final class AuthAction implements MiddlewareInterface
     /**
      * Redirect to the {@see cancelUrl} or simply close the popup window.
      *
-     * @param string $url URL to redirect.
+     * @param string|null $url URL to redirect.
      *
      * @throws Throwable
      * @throws ViewNotFoundException
@@ -389,10 +389,8 @@ final class AuthAction implements MiddlewareInterface
             return $this->authSuccess($client);
         }
 
-        // Get request token.
-        $requestToken = $client->fetchRequestToken($request);
         // Get authorization URL.
-        $url = $client->buildAuthUrl($requestToken);
+        $url = $client->buildAuthUrl($request);
         // Redirect to authorization URL.
         return $this->responseFactory
             ->createResponse(Status::MOVED_PERMANENTLY)

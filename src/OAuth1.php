@@ -78,12 +78,6 @@ abstract class OAuth1 extends OAuth
         array $params = []
     ): string {
         $requestToken = $this->fetchRequestToken($incomingRequest);
-        if (!is_object($requestToken)) {
-            $requestToken = $this->getState('requestToken');
-            if (!is_object($requestToken)) {
-                throw new InvalidArgumentException('Request token is required to build authorize URL!');
-            }
-        }
         $params['oauth_token'] = $requestToken->getToken();
 
         return RequestUtil::composeUrl($this->authUrl, $params);
@@ -105,7 +99,7 @@ abstract class OAuth1 extends OAuth
         $defaultParams = [
             'oauth_consumer_key' => $this->consumerKey,
             'oauth_callback' => $this->getReturnUrl($incomingRequest),
-            //'xoauth_displayname' => Yii::getApp()->name,
+            'xoauth_displayname' => $incomingRequest->getAttribute(AuthAction::AUTH_NAME),
         ];
         if (!empty($this->getScope())) {
             $defaultParams['scope'] = $this->getScope();
@@ -121,8 +115,12 @@ abstract class OAuth1 extends OAuth
         $request = $this->signRequest($request);
         $response = $this->sendRequest($request);
 
-        $content = Json::decode((string) $response->getBody());
-        $tokenConfig = $content ?: [];
+        $tokenConfig = Json::decode((string) $response->getBody());
+
+        if (empty($tokenConfig)) {
+            throw new InvalidArgumentException('Request token is required to build authorize URL!');
+        }
+
         $token = $this->createToken($tokenConfig);
         $this->setState('requestToken', $token);
 
@@ -314,9 +312,9 @@ abstract class OAuth1 extends OAuth
      * Fetches OAuth access token.
      *
      * @param ServerRequestInterface $incomingRequest
-     * @param string $oauthToken OAuth token returned with redirection back to client.
-     * @param OAuthToken $requestToken OAuth request token.
-     * @param string $oauthVerifier OAuth verifier.
+     * @param string|null $oauthToken OAuth token returned with redirection back to client.
+     * @param OAuthToken|null $requestToken OAuth request token.
+     * @param string|null $oauthVerifier OAuth verifier.
      * @param array $params additional request params.
      *
      * @return OAuthToken OAuth access token.
@@ -390,7 +388,7 @@ abstract class OAuth1 extends OAuth
     /**
      * Gets new auth token to replace expired one.
      *
-     * @param OAuthToken $token expired auth token.
+     * @param OAuthToken|null $token expired auth token.
      *
      * @return OAuthToken new auth token.
      */

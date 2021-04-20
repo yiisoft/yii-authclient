@@ -39,7 +39,7 @@ abstract class OAuth extends AuthClient
      */
     protected string $authUrl;
     /**
-     * @var string string auth request scope.
+     * @var string|null string auth request scope.
      */
     protected ?string $scope = null;
     /**
@@ -48,7 +48,7 @@ abstract class OAuth extends AuthClient
     protected bool $autoRefreshAccessToken = true;
 
     /**
-     * @var string URL, which user will be redirected after authentication at the OAuth provider web site.
+     * @var string|null URL, which user will be redirected after authentication at the OAuth provider web site.
      * Note: this should be absolute URL (with http:// or https:// leading).
      * By default current URL will be used.
      */

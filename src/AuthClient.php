@@ -48,9 +48,9 @@ abstract class AuthClient implements AuthClientInterface
      */
     protected array $normalizeUserAttributeMap = [];
     /**
-     * @var array view options in format: optionName => optionValue
+     * @var array|null view options in format: optionName => optionValue
      */
-    protected array $viewOptions;
+    protected ?array $viewOptions = null;
 
     protected PsrClientInterface $httpClient;
 

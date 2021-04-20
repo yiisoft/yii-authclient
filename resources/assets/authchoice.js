@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
-jQuery(function($) {
+(function($) {
     $.fn.authchoice = function(options) {
         options = $.extend({
             triggerSelector: 'a.auth-link',
@@ -66,4 +66,4 @@ jQuery(function($) {
             });
         });
     };
-});
+}(jQuery));

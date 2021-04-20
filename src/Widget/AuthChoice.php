@@ -6,6 +6,8 @@ namespace Yiisoft\Yii\AuthClient\Widget;
 
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncodeStringableInterface;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
@@ -133,7 +135,7 @@ final class AuthChoice extends Widget
             );
         }
         $this->options['id'] = $this->getId();
-        echo Html::beginTag('div', $this->options);
+        echo Html::openTag('div', $this->options);
     }
 
     public function getId(): string
@@ -154,7 +156,7 @@ final class AuthChoice extends Widget
         if ($this->autoRender) {
             $content .= $this->renderMainContent();
         }
-        $content .= Html::endTag('div');
+        $content .= Html::closeTag('div');
         return $content;
     }
 
@@ -168,11 +170,11 @@ final class AuthChoice extends Widget
      */
     protected function renderMainContent(): string
     {
-        $items = [];
+        $ul = Html::tag('ul', '', ['class' => 'auth-clients']);
         foreach ($this->getClients() as $externalService) {
-            $items[] = Html::tag('li', $this->clientLink($externalService));
+            $ul = $ul->addContent(Html::tag('li')->content($this->clientLink($externalService)));
         }
-        return Html::tag('ul', implode('', $items), ['class' => 'auth-clients']);
+        return $ul->render();
     }
 
     /**
@@ -195,15 +197,15 @@ final class AuthChoice extends Widget
      * Outputs client auth link.
      *
      * @param AuthClientInterface $client external auth client instance.
-     * @param string $text link text, if not set - default value will be generated.
+     * @param string|null $text link text, if not set - default value will be generated.
      * @param array $htmlOptions link HTML options.
      *
      * @throws InvalidConfigException on wrong configuration.
      * @throws \Yiisoft\Factory\Exception\InvalidConfigException
      *
-     * @return string generated HTML.
+     * @return NoEncodeStringableInterface generated HTML.
      */
-    public function clientLink(AuthClientInterface $client, string $text = null, array $htmlOptions = []): string
+    public function clientLink(AuthClientInterface $client, string $text = null, array $htmlOptions = []): NoEncodeStringableInterface
     {
         $viewOptions = $client->getViewOptions();
 
@@ -227,7 +229,7 @@ final class AuthChoice extends Widget
                     $htmlOptions['data-popup-height'] = $viewOptions['popupHeight'];
                 }
             }
-            return Html::a($text, $this->createClientUrl($client), $htmlOptions);
+            return Html::a('', $this->createClientUrl($client), $htmlOptions)->content($text);
         }
 
         $widgetConfig = $viewOptions['widget'];
@@ -242,7 +244,18 @@ final class AuthChoice extends Widget
         unset($widgetConfig['class']);
         $widgetConfig['client'] = $client;
         $widgetConfig['authChoice'] = $this;
-        return $widgetClass::widget($widgetConfig)->render();
+        return new class($widgetClass::widget($widgetConfig)->render()) implements NoEncodeStringableInterface {
+            private string $string;
+
+            public function __construct(string $string) {
+                $this->string = $string;
+            }
+
+            public function __toString(): string
+            {
+                return $this->string;
+            }
+        };
     }
 
     /**

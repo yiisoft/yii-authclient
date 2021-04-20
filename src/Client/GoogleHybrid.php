@@ -23,7 +23,7 @@ use Yiisoft\Yii\AuthClient\Widget\GooglePlusButton;
  */
 final class GoogleHybrid extends Google
 {
-    private bool $validateAuthState = false;
+    protected bool $validateAuthState = false;
 
     protected function defaultReturnUrl(ServerRequestInterface $request): string
     {

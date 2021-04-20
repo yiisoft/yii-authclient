@@ -21,9 +21,9 @@ use Yiisoft\Yii\AuthClient\RequestUtil;
  */
 final class VKontakte extends OAuth2
 {
-    private string $authUrl = 'https://oauth.vk.com/authorize';
-    private string $tokenUrl = 'https://oauth.vk.com/access_token';
-    private string $endpoint = 'https://api.vk.com/method';
+    protected string $authUrl = 'https://oauth.vk.com/authorize';
+    protected string $tokenUrl = 'https://oauth.vk.com/access_token';
+    protected string $endpoint = 'https://api.vk.com/method';
     /**
      * @var array list of attribute names, which should be requested from API to initialize user attributes.
      */

@@ -20,12 +20,12 @@ use Yiisoft\Yii\AuthClient\OAuth1;
  */
 final class Twitter extends OAuth1
 {
-    private string $authUrl = 'https://api.twitter.com/oauth/authenticate';
-    private string $requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
-    private string $requestTokenMethod = 'POST';
-    private string $accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
-    private string $accessTokenMethod = 'POST';
-    private string $endpoint = 'https://api.twitter.com/1.1';
+    protected string $authUrl = 'https://api.twitter.com/oauth/authenticate';
+    protected string $requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
+    protected string $requestTokenMethod = 'POST';
+    protected string $accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
+    protected string $accessTokenMethod = 'POST';
+    protected string $endpoint = 'https://api.twitter.com/1.1';
     /**
      * @var array list of extra parameters, which should be used, while requesting user attributes from Twitter API.
      * For example:

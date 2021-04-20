@@ -23,9 +23,9 @@ use Yiisoft\Yii\AuthClient\OAuthToken;
  */
 final class TwitterOAuth2 extends OAuth2
 {
-    private string $authUrl = 'https://api.twitter.com/oauth2/authenticate';
-    private string $tokenUrl = 'https://api.twitter.com/oauth2/token';
-    private string $endpoint = 'https://api.twitter.com/1.1';
+    protected string $authUrl = 'https://api.twitter.com/oauth2/authenticate';
+    protected string $tokenUrl = 'https://api.twitter.com/oauth2/token';
+    protected string $endpoint = 'https://api.twitter.com/1.1';
 
     public function applyAccessTokenToRequest(RequestInterface $request, OAuthToken $accessToken): RequestInterface
     {

@@ -63,12 +63,12 @@ class GooglePlusButton extends AuthChoiceItem
     protected function registerClientScript()
     {
         $js = <<<JS
-(function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/client:plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-})();
-JS;
+        (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/client:plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+        JS;
         $this->view->registerJs($js, WebView::POSITION_END, __CLASS__);
     }
 
@@ -138,29 +138,29 @@ JS;
 
         $callbackName = 'googleSignInCallback' . md5($this->id);
         $js = <<<JS
-function $callbackName(authResult); {
-    var urlParams = [];
+        function $callbackName(authResult); {
+            var urlParams = [];
 
-    if (authResult['code']) {
-        urlParams.push('code=' + encodeURIComponent(authResult['code']));
-    } else if (authResult['error']) {
-        if (authResult['error'] == 'immediate_failed') {
-            return;
-        }
-        urlParams.push('error=' + encodeURIComponent(authResult['error']));
-        urlParams.push('error_description=' + encodeURIComponent(authResult['error_description']));
-    } else {
-        for (var propName in authResult) {
-            var propValue = authResult[propName];
-            if (typeof propValue != 'object') {
-                urlParams.push(encodeURIComponent(propName) + '=' + encodeURIComponent(propValue));
+            if (authResult['code']) {
+                urlParams.push('code=' + encodeURIComponent(authResult['code']));
+            } else if (authResult['error']) {
+                if (authResult['error'] == 'immediate_failed') {
+                    return;
+                }
+                urlParams.push('error=' + encodeURIComponent(authResult['error']));
+                urlParams.push('error_description=' + encodeURIComponent(authResult['error_description']));
+            } else {
+                for (var propName in authResult) {
+                    var propValue = authResult[propName];
+                    if (typeof propValue != 'object') {
+                        urlParams.push(encodeURIComponent(propName) + '=' + encodeURIComponent(propValue));
+                    }
+                }
             }
-        }
-    }
 
-    window.location = '$url' + urlParams.join('&');
-}
-JS;
+            window.location = '$url' + urlParams.join('&');
+        }
+        JS;
         $this->view->registerJs($js, WebView::POSITION_END, __CLASS__ . '#' . $this->id);
 
         return $callbackName;
